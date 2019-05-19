@@ -3,4 +3,4 @@ project(XMLParser)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(XMLParser src/main.cpp src/xmlParser.cpp src/xmlParser.h)
+add_executable(XMLParser src/main.cpp src/XMLParser.cpp src/XMLParser.h src/XHSTTPrinterModel.h src/XHSTTPrinterModel.cpp src/Model.h src/Model.cpp src/ModelEntity.cpp src/ModelEntity.h)

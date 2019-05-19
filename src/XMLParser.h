@@ -1,15 +1,14 @@
-//
-// Created by sipwarriper on 5/17/19.
-//
 #include <pugixml.hpp>
 #include <iostream>
+#include "Model.h"
+
 #ifndef XMLPARSER_XHSTTPARSER_H
 #define XMLPARSER_XHSTTPARSER_H
 
 
-class xmlParser {
+class XMLParser {
 public:
-    xmlParser(std::string filename); //constructor
+    XMLParser(std::string filename); //constructor
 
     void parse_model();
 
@@ -34,8 +33,8 @@ public:
 
 private:
     pugi::xml_document document;
-
-    //TODO:necessitem un assign_time i un assign_res. I un model...
+    Model *model;
+    //TODO:necessitem un assign_time i un assign_res.
 
 
 

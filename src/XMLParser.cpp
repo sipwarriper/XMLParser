@@ -2,9 +2,9 @@
 // Created by sipwarriper on 5/17/19.
 //
 
-#include "xmlParser.h"
+#include "XMLParser.h"
 
-xmlParser::xmlParser(std::string filename) {
+XMLParser::XMLParser(std::string filename) {
 
     if(!document.load_file(filename.c_str())){
         throw "Error loading xml file. Aborting.";
