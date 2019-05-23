@@ -1,7 +1,3 @@
-//
-// Created by sipwarriper on 5/17/19.
-//
-
 #include "XMLParser.h"
 
 XMLParser::XMLParser(std::string filename) {

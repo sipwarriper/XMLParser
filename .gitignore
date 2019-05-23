@@ -1,3 +1,9 @@
 .idea/
 .vs/
 cmake-build-debug/
+nuget.exe
+pugixml.1.9.0
+XMLParser.vcxproj
+XMLParser.vcxproj.filters
+XMLParser.vcxproj.user
+packages.config

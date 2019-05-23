@@ -2,28 +2,35 @@
 #define XMLPARSER_MODEL_H
 
 #include "ModelEntity.h"
+#include <map>
+#include <unordered_map>
 
 
 class Model {
 
 public:
-    //TODO: estaria be unificar-los aqui
-    virtual void register_time() = 0;
-    virtual void register_event() = 0;
-    virtual void register_resource() =0;
-    virtual void register_resource_type() = 0;
+	Model();
 
-    virtual void declare_time_group() = 0;
-    virtual void declare_resource_group() = 0;
-    virtual void declare_event_group() = 0;
-
-    virtual void time_to_group() = 0;
-    virtual void resource_to_group() = 0;
-    virtual void event_to_group() = 0;
 
 
     //TODO: falten els getters
 protected:
+	std::map<std::string, Event> events_;
+	std::map<std::string, Resource> resources_;
+	std::map<std::string, Time> times_;
+
+	std::unordered_map<std::string, ResourceType> rtypes_;
+
+	std::unordered_map<std::string, Group> time_groups_;
+	std::unordered_map<std::string, Group> event_groups_;
+	std::unordered_map<std::string, Group> resource_groups_;
+
+
+	//num2 dictionaries (allowing fast fetching of elements by its elements.num attribute)
+	std::unordered_map<int, Event> num2event_;
+	std::unordered_map<int, Resource> num2resource_;
+	std::unordered_map<int, Time> num2time_;
+	std::unordered_map<int, ResourceType> num2rtype_;
 
 
 
