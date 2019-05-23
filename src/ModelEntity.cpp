@@ -6,6 +6,17 @@ int resources_counter = 0;
 int resource_type_counter = 0;
 
 
+Group::Group(const std::string& id, const std::string& name, const std::string& gtype, const std::string& opt){
+	identifier_ = id;
+	name_ = name;
+	gtype_ = gtype;
+	elems_ = std::set<std::string>();
+}
+
+void Group::add_element(const std::string& ref){
+	elems_.insert(ref);
+}
+
 ModelEntity::ModelEntity(const std::string &id, const std::string &name) {
     identifier_ = id;
     name_ = name;
@@ -46,7 +57,7 @@ Time::Time(const std::string &id, const std::string &name) : ModelEntity(id, nam
 }
 
 
-Resource::Resource(const std::string &id, const std::string &rename, std::optional<ResourceType> r_type) : ModelEntity(id, rename) {
+Resource::Resource(const std::string &id, const std::string &rename, std::optional<std::string> r_type) : ModelEntity(id, rename) {
 	if (r_type == std::nullopt) {/*throw*/ }
 	rtype_ = r_type.value();
 	type_ = "resources";

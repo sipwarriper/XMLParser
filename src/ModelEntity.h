@@ -15,6 +15,15 @@ extern int resources_counter;
 extern int resource_type_counter;
 
 class Group{
+public:
+	Group(const std::string &id="", const std::string &name="", const std::string &gtype="", const std::string &opt = "");
+	void add_element(const std::string & ref);
+protected:
+	std::string identifier_;
+	std::string name_;
+	std::string gtype_; // group type: {TimeGroup, EventGroup, ResourceGroup}
+	std::string opt_; //  optional info about group (whether it represents a Day, Week, Course..)
+	std::set<std::string> elems_; // set with the ids of elements forming this group.
 
 };
 
@@ -58,11 +67,11 @@ private:
 
 class Resource: public ModelEntity{
 public:
-	Resource(const std::string &id="", const std::string &rename = "NAMELESS_TIME", std::optional<ResourceType> r_type = std::nullopt);
+	Resource(const std::string &id="", const std::string &rename = "NAMELESS_TIME", std::optional<std::string> r_type = std::nullopt);
 
 protected:
     std::string type_;
-	ResourceType rtype_;
+	std::string rtype_; //resource type identifier 
 
 };
 

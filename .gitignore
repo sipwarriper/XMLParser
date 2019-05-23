@@ -7,3 +7,4 @@ XMLParser.vcxproj
 XMLParser.vcxproj.filters
 XMLParser.vcxproj.user
 packages.config
+debug/
