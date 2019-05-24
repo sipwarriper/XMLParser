@@ -18,6 +18,8 @@ class Group{
 public:
 	Group(const std::string &id="", const std::string &name="", const std::string &gtype="", const std::string &opt = "");
 	void add_element(const std::string & ref);
+
+	std::string get_opt() const;
 protected:
 	std::string identifier_;
 	std::string name_;
@@ -30,8 +32,9 @@ protected:
 class ModelEntity{
 public:
     ModelEntity(const std::string &id = "", const std::string &name ="NAMELESS");
-    int get_num();
-    std::string get_identifier();
+    int get_num() const;
+    std::string get_identifier() const;
+	void add_group(const std::string& group_ref);
 
 protected:
     std::string identifier_;
@@ -49,7 +52,10 @@ class Resource;
 class ResourceType: public ModelEntity{
 public:
     ResourceType(const std::string &id="", const std::string &name ="NAMELESS_RESOURCE_TYPE");
-    void add_resource(Resource resource);
+    void add_resource(const Resource& resource);
+	int get_upper_bound() const;
+	int get_lower_bound() const;
+
 protected:
     std::string type_;
     int lower_bound_, upper_bound_;
@@ -68,6 +74,8 @@ private:
 class Resource: public ModelEntity{
 public:
 	Resource(const std::string &id="", const std::string &rename = "NAMELESS_TIME", std::optional<std::string> r_type = std::nullopt);
+
+	std::string get_rtype() const;
 
 protected:
     std::string type_;

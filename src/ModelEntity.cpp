@@ -17,6 +17,8 @@ void Group::add_element(const std::string& ref){
 	elems_.insert(ref);
 }
 
+std::string Group::get_opt() const { return opt_;}
+
 ModelEntity::ModelEntity(const std::string &id, const std::string &name) {
     identifier_ = id;
     name_ = name;
@@ -24,12 +26,16 @@ ModelEntity::ModelEntity(const std::string &id, const std::string &name) {
     groups_ = std::set<std::string>();
 }
 
-int ModelEntity::get_num() {
+int ModelEntity::get_num() const{
     return num_;
 }
 
-std::string ModelEntity::get_identifier() {
+std::string ModelEntity::get_identifier() const{
     return identifier_;
+}
+
+void ModelEntity::add_group(const std::string& group_ref){
+	groups_.insert(group_ref);
 }
 
 ResourceType::ResourceType(const std::string &id, const std::string &name) : ModelEntity(id, name) {
@@ -40,7 +46,7 @@ ResourceType::ResourceType(const std::string &id, const std::string &name) : Mod
     resource_type_counter++; 
 }
 
-void ResourceType::add_resource(Resource resource) {
+void ResourceType::add_resource(const Resource& resource) {
     groups_.insert(resource.get_identifier());
     domain_.insert(resource.get_num());
 
@@ -48,6 +54,10 @@ void ResourceType::add_resource(Resource resource) {
     if (resource.get_num() > upper_bound_) upper_bound_ = resource.get_num();
     else if(resource.get_num() < lower_bound_) lower_bound_ = resource.get_num();
 }
+
+int ResourceType::get_upper_bound() const { return upper_bound_; }
+
+int ResourceType::get_lower_bound() const { return lower_bound_; }
 
 
 Time::Time(const std::string &id, const std::string &name) : ModelEntity(id, name) {
@@ -64,6 +74,8 @@ Resource::Resource(const std::string &id, const std::string &rename, std::option
 	num_ = resources_counter;
 	resources_counter++;
 }
+
+std::string Resource::get_rtype() const { return rtype_; }
 
 Event::Event(const std::string& id, const std::string& rename, const int &duration, const std::optional<std::string> &color): ModelEntity(id,rename) {
 	type_ = "event";

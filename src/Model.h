@@ -18,27 +18,34 @@ public:
 	void register_resource(std::string id, std::string name, std::string rtype);
 	void register_resource_type(std::string id, std::string name);
 
-	std::optional<Time> get_time_by_ref(std::string ref);
-	std::optional<Resource> get_resource_by_ref(std::string ref);
-	std::optional<Event >get_event_by_ref(std::string ref);
+	Time* get_time_by_ref(std::string ref);
+	Resource* get_resource_by_ref(std::string ref);
+	Event* get_event_by_ref(std::string ref);
 
 	void declare_time_group(const std::string& id, const std::string& name, const std::string& tag ="");
 	void declare_resource_group(const std::string& id, const std::string& name, const std::string& rtype_ref);
 	void declare_event_group(const std::string& id, const std::string& name, const std::string& tag = "");
 
+	void time_to_group(const std::string& time_id, const std::string& group_ref);
+	void resource_to_group(const std::string& resource_id, const std::string& group_ref);
+	void event_to_group(const std::string& event_id, const std::string& group_ref);
+
+	int upper_bound_by_resource_type(const int &num); //Function used to determine the upper bound of a variable representing a given resource type
+
+
+
+
 	/*TODO: Falta el seguent: 
-	*	-elem to group
-	*	-upper_bound_by_resource_type(num)
 	*	-getters
 	*	-metodes virtuals
 	*/
 
 protected:
-	std::map<std::string, Event> events_;
-	std::map<std::string, Resource> resources_;
-	std::map<std::string, Time> times_;
+	std::map<std::string, Event*> events_;
+	std::map<std::string, Resource*> resources_;
+	std::map<std::string, Time*> times_;
 
-	std::unordered_map<std::string, ResourceType> rtypes_;
+	std::unordered_map<std::string, ResourceType*> rtypes_;
 
 	std::unordered_map<std::string, Group> time_groups_;
 	std::unordered_map<std::string, Group> event_groups_;
@@ -46,10 +53,10 @@ protected:
 
 
 	//num2 dictionaries (allowing fast fetching of elements by its elements.num attribute)
-	std::unordered_map<int, Event> num2event_;
-	std::unordered_map<int, Resource> num2resource_;
-	std::unordered_map<int, Time> num2time_;
-	std::unordered_map<int, ResourceType> num2rtype_;
+	std::unordered_map<int, Event*> num2event_;
+	std::unordered_map<int, Resource*> num2resource_;
+	std::unordered_map<int, Time*> num2time_;
+	std::unordered_map<int, ResourceType*> num2rtype_;
 	   	 
 };
 
