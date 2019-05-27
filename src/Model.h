@@ -21,6 +21,7 @@ public:
 	Time* get_time_by_ref(std::string ref) const;
 	Resource* get_resource_by_ref(std::string ref) const;
 	Event* get_event_by_ref(std::string ref) const;
+	ResourceType* get_rtype_by_ref(std::string ref) const;
 
 	void declare_time_group(const std::string& id, const std::string& name, const std::string& tag ="");
 	void declare_resource_group(const std::string& id, const std::string& name, const std::string& rtype_ref);
@@ -36,10 +37,24 @@ public:
 	std::set<std::string> get_resources_from_group(const std::string & group_ref) const;
 	std::set<std::string> get_times_from_group(const std::string & group_ref) const;
 
+	virtual void set_time_for_event(int event_num, int duration, Time* start_t) = 0;
+	virtual void prefer_resources_constraint() = 0;
+	virtual void prefer_times_constraint() = 0;
+	virtual void avoid_clashes_constraint() = 0;
+	virtual void split_events_constraint() = 0;
+	virtual void spread_events_constraint() = 0; 
+	//time_groups is a dictionary of tuples. where keys are time_group references and values are tuples of the kind(minimum, maximum)
 
-	/*TODO: Falta el seguent:
-	*	-metodes virtuals
-	*/
+	virtual void avoid_unavailable_times_constraint() = 0;
+	virtual void distribute_split_events_constraints() = 0;
+	virtual void limit_idle_times_constraint() = 0;
+	virtual void cluster_busy_times_constraint() = 0;
+	virtual void on_parsed_events(bool spread_constraint=true) = 0;
+	//TODO: cal ficar parametres i arreglar el return d'aquests metodes
+
+	//todo: virtual std::vector<> get_times_assignments() = 0;
+ 
+
 
 protected:
 	std::map<std::string, Event*> events_;

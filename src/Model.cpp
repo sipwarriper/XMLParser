@@ -75,6 +75,12 @@ Event* Model::get_event_by_ref(std::string ref) const{
 	return nullptr;
 }
 
+ResourceType* Model::get_rtype_by_ref(std::string ref) const{
+	auto it = rtypes_.find(ref);
+	if (it != rtypes_.end()) return it->second;
+	return nullptr;
+}
+
 void Model::declare_time_group(const std::string& id, const std::string& name, const std::string& tag){
 	if (time_groups_.find(id)==time_groups_.end()){
 		Group group = Group(id, name, "TimeGroup", tag);
@@ -112,7 +118,7 @@ void Model::time_to_group(const std::string& time_id, const std::string& group_r
 void Model::resource_to_group(const std::string& resource_id, const std::string& group_ref){
 	if (resources_.find(resource_id) == resources_.end() || resource_groups_.find(group_ref) == resource_groups_.end())
 		throw ModelException("Undeclared reference encountered");
-	if (resources_[resource_id]->get_rtype() != resource_groups_[group_ref].get_opt())
+	if (resources_[resource_id]->get_rtype_ref() != resource_groups_[group_ref].get_opt())
 		throw ModelException("Attached resource to a group of different type");
 	resources_[resource_id]->add_group(group_ref);
 	resource_groups_[resource_id].add_element(resource_id);
@@ -146,12 +152,6 @@ std::set<std::string> Model::get_times_from_group(const std::string& group_ref) 
 		throw ModelException("Incorrect group_ref");
 	return time_groups_.find(group_ref)->second.get_elems();
 }
-
-
-
-
-
-
 
 
 

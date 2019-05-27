@@ -1,11 +1,12 @@
 #ifndef XMLPARSER_MODELENTITY_H
 #define XMLPARSER_MODELENTITY_H
 
-#include <optional>
 
+#include <optional>
 #include <string>
 #include <set>
 #include <unordered_map>
+#include "Model.h"
 
 //global variables
 
@@ -73,9 +74,9 @@ private:
 
 class Resource: public ModelEntity{
 public:
-	Resource(const std::string &id="", const std::string &rename = "NAMELESS_TIME", std::optional<std::string> r_type = std::nullopt);
+	Resource(const std::string &id="", const std::string &name = "NAMELESS_TIME", std::string r_type = "");
 
-	std::string get_rtype() const;
+	std::string get_rtype_ref() const;
 
 protected:
     std::string type_;
@@ -85,9 +86,9 @@ protected:
 
 class Event: public ModelEntity{
 public:
-	Event(const std::string& id="", const std::string& rename = "NAMELESS_EVENT", const int &duration = 1, const std::optional<std::string> &color= std::nullopt);
+	Event(const std::string& id="", const std::string& name = "NAMELESS_EVENT", const int &duration = 1, const std::string &color= "");
 	
-	bool has_role(std::string role) const;
+	bool has_role(const std::string& role) const;
 	bool has_preassigned_resource(const std::string& role) const;
 	bool has_preassigned_time() const;
 	bool is_preassigned(int num) const;
@@ -102,7 +103,7 @@ public:
 	std::set<int> get_preassigned_nums() const; //returns a set containing all numerals of preassigned resources
 
 	void set_time(const std::string& time_ref);
-	void attach_reosurce(); //TODO: primer caldria avançar el model
+	void attach_reosurce(Resource* resource, std::string role, std::string resource_type, Model* model);
 
 
 
@@ -111,12 +112,12 @@ public:
 
 protected:
 	std::string type_;
-	std::optional<std::string> color_;
+	std::string color_;
 	int duration_;
-	std::optional<std::string> time_; //time reference
+	std::string time_; //time reference
 
 	std::unordered_map<std::string, Resource*> resources_;
-	std::unordered_map<std::string, ResourceType*> mapping_;
+	std::unordered_map<std::string, std::string> mapping_; //roles->rtype_ref
 
 	std::set<int> needed_; //set of needed ResourceType num's 
 

@@ -8,11 +8,12 @@
 
 class XMLParser {
 public:
-    XMLParser(std::string filename); //constructor
+    XMLParser(Model* model, std::string filename); //constructor
+
 
     void parse_model();
 
-    void parse_instance();
+    void parse_instance(pugi::xml_node xml_instance);
 
     void parse_times();
     void parse_time_groups();
@@ -33,10 +34,12 @@ public:
 
 private:
     pugi::xml_document document;
-    Model *model;
-    //TODO:necessitem un assign_time i un assign_res.
+    Model *model_;
+	pugi::xml_node xml_root_;
+	std::string xml_source_filename_;
 
-
+	std::set<std::string> assign_time_;
+	std::unordered_map<std::string, std::set<std::string>> assign_res_;
 
 
 
