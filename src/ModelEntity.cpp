@@ -17,6 +17,10 @@ void Group::add_element(const std::string& ref){
 	elems_.insert(ref);
 }
 
+std::set<std::string> Group::get_elems() const{
+	return elems_;
+}
+
 std::string Group::get_opt() const { return opt_;}
 
 ModelEntity::ModelEntity(const std::string &id, const std::string &name) {
@@ -89,11 +93,11 @@ Event::Event(const std::string& id, const std::string& rename, const int &durati
 	needed_ = std::set<int>();
 }
 
-bool Event::has_role(std::string role) {
+bool Event::has_role(std::string role) const{
 	return resources_.find(role) != resources_.end();
 }
 
-bool Event::has_preassigned_resource(const std::string& role) {
+bool Event::has_preassigned_resource(const std::string& role) const {
 	return resources_[role] != nullptr;
 }
 
@@ -102,17 +106,15 @@ bool Event::has_preassigned_time() const
 	return time_ != std::nullopt;
 }
 
-bool Event::is_preassigned(int num)
-{
+bool Event::is_preassigned(int num) const{
 	bool result = false;
 	for (auto & resource : resources_) if (resource.second->get_num() == num) result = true;
 	return result;
 }
 
-std::set<Resource> Event::get_preassigned_resources()
-{
-	auto result = std::set<Resource>();
-	for (auto& resource : resources_) if (resource.second != nullptr) result.insert(*resource.second);
+std::set<const Resource*> Event::get_preassigned_resources() const{
+	auto result = std::set<const Resource*>();
+	for (auto& resource : resources_) if (resource.second != nullptr) result.insert(resource.second);
 	return result;
 }
 
@@ -121,8 +123,7 @@ Resource Event::get_preassigned_resource(const std::string& role)
 	return *resources_[role];
 }
 
-std::set<std::string> Event::get_roles()
-{
+std::set<std::string> Event::get_roles() const{
 	auto result = std::set<std::string>();
 	for (auto & resource : resources_) result.insert(resource.first);
 	return result;
@@ -133,13 +134,11 @@ std::set<int> Event::get_needed_resources() const
 	return needed_;
 }
 
-Resource Event::get_preassigned(const int& num)
-{
+Resource Event::get_preassigned(const int& num) const {
 	for (auto & resource : resources_) if (resource.second->get_num() == num) return *resource.second;
 }
 
-std::set<int> Event::get_preassigned_nums()
-{
+std::set<int> Event::get_preassigned_nums() const {
 	auto result = std::set<int>();
 	for(auto & resource : resources_)
 		if (resource.second != nullptr) result.insert(resource.second->get_num());

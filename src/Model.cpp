@@ -32,6 +32,7 @@ void Model::register_event(const std::string& id, const std::string& name, const
 		Event *event = new Event(id, name, duration, color.value());
 		events_.insert({id,event});
 		num2event_.insert({ event->get_num(), event });
+		auto testing = event->get_preassigned_resources();
 	}
 	else throw ModelException("Multiple Events with the same id");
 }
@@ -56,19 +57,19 @@ void Model::register_resource_type(std::string id, std::string name){
 	}
 }
 
-Time* Model::get_time_by_ref(std::string ref){
+Time* Model::get_time_by_ref(std::string ref) const{
 	auto it = times_.find(ref);
 	if (it != times_.end()) return it->second;
 	return nullptr;
 }
 
-Resource* Model::get_resource_by_ref(std::string ref){
+Resource* Model::get_resource_by_ref(std::string ref) const{
 	auto it = resources_.find(ref);
 	if (it != resources_.end()) return it->second;
 	return nullptr;
 }
 
-Event* Model::get_event_by_ref(std::string ref){
+Event* Model::get_event_by_ref(std::string ref) const{
 	auto it = events_.find(ref);
 	if (it != events_.end()) return it->second;
 	return nullptr;
@@ -79,7 +80,7 @@ void Model::declare_time_group(const std::string& id, const std::string& name, c
 		Group group = Group(id, name, "TimeGroup", tag);
 		time_groups_.insert({id, group});
 	}
-	else throw ModelException("'Already defined TimeGroup");
+	else throw ModelException("Already defined TimeGroup");
 }
 
 void Model::declare_resource_group(const std::string& id, const std::string& name, const std::string& rtype_ref){
@@ -88,7 +89,7 @@ void Model::declare_resource_group(const std::string& id, const std::string& nam
 			Group group = Group(id, name, "ResourceGroup", rtype_ref);
 			resource_groups_.insert({ id, group });
 		}
-		else throw ModelException("'Already defined ResourceGroup");
+		else throw ModelException("Already defined ResourceGroup");
 	}
 	else throw ModelException("Undeclared resource type");
 }
@@ -98,7 +99,7 @@ void Model::declare_event_group(const std::string& id, const std::string& name, 
 		Group group = Group(id, name, "EventGroup", tag);
 		event_groups_.insert({ id, group });
 	}
-	else throw ModelException("'Already defined EventGroup");
+	else throw ModelException("Already defined EventGroup");
 }
 
 void Model::time_to_group(const std::string& time_id, const std::string& group_ref){
@@ -124,9 +125,29 @@ void Model::event_to_group(const std::string& event_id, const std::string& group
 	event_groups_[group_ref].add_element(event_id);
 }
 
-int Model::upper_bound_by_resource_type(const int &num){
-	return num2rtype_[num]->get_upper_bound();
+int Model::upper_bound_by_resource_type(const int &num) const{
+	return num2rtype_.find(num)->second->get_upper_bound();
 }
+
+std::set<std::string> Model::get_events_from_group(const std::string& group_ref) const{
+	if (group_ref.empty() || event_groups_.find(group_ref) == event_groups_.end())
+		throw ModelException("Incorrect group_ref");
+	return event_groups_.find(group_ref)->second.get_elems();
+}
+
+std::set<std::string> Model::get_resources_from_group(const std::string& group_ref) const{
+	if (group_ref.empty() || resource_groups_.find(group_ref) == resource_groups_.end())
+		throw ModelException("Incorrect group_ref");
+	return resource_groups_.find(group_ref)->second.get_elems();
+}
+
+std::set<std::string> Model::get_times_from_group(const std::string& group_ref) const{
+	if (group_ref.empty() || time_groups_.find(group_ref) == time_groups_.end())
+		throw ModelException("Incorrect group_ref");
+	return time_groups_.find(group_ref)->second.get_elems();
+}
+
+
 
 
 

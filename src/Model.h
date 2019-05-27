@@ -18,9 +18,9 @@ public:
 	void register_resource(std::string id, std::string name, std::string rtype);
 	void register_resource_type(std::string id, std::string name);
 
-	Time* get_time_by_ref(std::string ref);
-	Resource* get_resource_by_ref(std::string ref);
-	Event* get_event_by_ref(std::string ref);
+	Time* get_time_by_ref(std::string ref) const;
+	Resource* get_resource_by_ref(std::string ref) const;
+	Event* get_event_by_ref(std::string ref) const;
 
 	void declare_time_group(const std::string& id, const std::string& name, const std::string& tag ="");
 	void declare_resource_group(const std::string& id, const std::string& name, const std::string& rtype_ref);
@@ -30,13 +30,14 @@ public:
 	void resource_to_group(const std::string& resource_id, const std::string& group_ref);
 	void event_to_group(const std::string& event_id, const std::string& group_ref);
 
-	int upper_bound_by_resource_type(const int &num); //Function used to determine the upper bound of a variable representing a given resource type
+	int upper_bound_by_resource_type(const int &num) const; //Function used to determine the upper bound of a variable representing a given resource type
+
+	std::set<std::string> get_events_from_group(const std::string & group_ref) const;
+	std::set<std::string> get_resources_from_group(const std::string & group_ref) const;
+	std::set<std::string> get_times_from_group(const std::string & group_ref) const;
 
 
-
-
-	/*TODO: Falta el seguent: 
-	*	-getters
+	/*TODO: Falta el seguent:
 	*	-metodes virtuals
 	*/
 

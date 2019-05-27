@@ -18,7 +18,7 @@ class Group{
 public:
 	Group(const std::string &id="", const std::string &name="", const std::string &gtype="", const std::string &opt = "");
 	void add_element(const std::string & ref);
-
+	std::set<std::string> get_elems() const;
 	std::string get_opt() const;
 protected:
 	std::string identifier_;
@@ -87,19 +87,19 @@ class Event: public ModelEntity{
 public:
 	Event(const std::string& id="", const std::string& rename = "NAMELESS_EVENT", const int &duration = 1, const std::optional<std::string> &color= std::nullopt);
 	
-	bool has_role(std::string role);
-	bool has_preassigned_resource(const std::string& role);
+	bool has_role(std::string role) const;
+	bool has_preassigned_resource(const std::string& role) const;
 	bool has_preassigned_time() const;
-	bool is_preassigned(int num);
+	bool is_preassigned(int num) const;
 
-	std::set<Resource> get_preassigned_resources();
+	std::set<const Resource*> get_preassigned_resources() const;
 	Resource get_preassigned_resource(const std::string &role);
 
-	std::set<std::string> get_roles();
+	std::set<std::string> get_roles() const;
 	std::set<int> get_needed_resources() const;
 
-	Resource get_preassigned(const int &num);
-	std::set<int> get_preassigned_nums(); //returns a set containing all numerals of preassigned resources
+	Resource get_preassigned(const int &num) const;
+	std::set<int> get_preassigned_nums() const; //returns a set containing all numerals of preassigned resources
 
 	void set_time(const std::string& time_ref);
 	void attach_reosurce(); //TODO: primer caldria avançar el model
