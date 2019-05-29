@@ -3,11 +3,12 @@
 #include <iostream>
 #include <limits>
 #include <algorithm>
+#include <math.h>
 
 XMLParser::XMLParser(Model* model, std::string filename) {
 
     if(!document.load_file(filename.c_str())){
-        throw std::exception("Error loading xml file. Aborting.");
+        throw std::runtime_error("Error loading xml file. Aborting.");
     }
 	model_ = model;
 
@@ -128,8 +129,8 @@ void XMLParser::parse_events(const pugi::xml_node& xml_events){
 		Event* event = model_->get_event_by_ref(id);
 		pugi::xml_node xml_resources = xml_elem.child("Resources");
 		
-		if (!xml_resources || !xml_resources.child("Resource")) throw
-			std::exception("Unsupported feature: Encountered an Event without any resource requirements");
+		if (!xml_resources || !xml_resources.child("Resource"))
+		    throw std::runtime_error("Unsupported feature: Encountered an Event without any resource requirements");
 
 		for(pugi::xml_node xml_resource : xml_resources.children("Resource")){
 			std::string ref = xml_resource.attribute("Reference").as_string();
@@ -154,11 +155,11 @@ void XMLParser::parse_events(const pugi::xml_node& xml_events){
 			pugi::xml_node xml_time = xml_elem.child("Time");
 			if (xml_time) {
 				std::string time_ref = xml_time.attribute("Reference").as_string();
-				if (model_->get_time_by_ref(time_ref) == nullptr) throw std::exception("Event with an undeclared Time reference");
+				if (model_->get_time_by_ref(time_ref) == nullptr) throw std::runtime_error("Event with an undeclared Time reference");
 				event->set_time(time_ref);
 			}
 			else if (assign_time_.find(id) == assign_time_.end())
-				throw std::exception("Event without Time nor assign time constraint");
+				throw std::runtime_error("Event without Time nor assign time constraint");
 		}
 		//notify the model that all events have been fully parsed (before any constraints ofc)
 		model_->on_parsed_events(xml_constraints.child("SpreadEventsConstraint"));
@@ -380,7 +381,7 @@ void XMLParser::parse_split_events_constraint(const pugi::xml_node& xml_node){
 
 		//check integrity
 		if (max < min || max_amount < min_amount || events.empty())
-			throw std::exception("Failed integrity check of split events constraint");
+			throw std::runtime_error("Failed integrity check of split events constraint");
 
 		int points_of_app = events.size();
 		int cost = constraint_cost(xml_node, points_of_app);
@@ -442,7 +443,7 @@ void XMLParser::parse_distribute_split_events_constraint(const pugi::xml_node& x
 		int max = xml_node.child("Maximum").text().as_int();
 		//integrity check
 		if (max < min || events.empty())
-			throw std::exception("Failed integrity check of distribute split events constraint");
+			throw std::runtime_error("Failed integrity check of distribute split events constraint");
 
 		int points_of_app = events.size();
 		int cost = constraint_cost(xml_node, points_of_app);
