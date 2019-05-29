@@ -27,9 +27,9 @@ void Model::register_time(const std::string& id, const std::string& name){
 	else throw ModelException("Multiple Times with the same id");
 }
 
-void Model::register_event(const std::string& id, const std::string& name, const int &duration, const std::optional<std::string> &color){
+void Model::register_event(const std::string& id, const std::string& name, const int &duration, const std::string &color){
 	if (events_.find(id) == events_.end()) {
-		Event *event = new Event(id, name, duration, color.value());
+		Event *event = new Event(id, name, duration, color);
 		events_.insert({id,event});
 		num2event_.insert({ event->get_num(), event });
 		auto testing = event->get_preassigned_resources();

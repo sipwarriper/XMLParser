@@ -96,6 +96,7 @@ Event::Event(const std::string& id, const std::string& rename, const int &durati
 	needed_ = std::set<int>();
 }
 
+
 bool Event::has_role(const std::string& role) const{
 	return resources_.find(role) != resources_.end();
 }

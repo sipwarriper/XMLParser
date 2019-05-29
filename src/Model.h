@@ -1,22 +1,27 @@
-#ifndef XMLPARSER_MODEL_H
-#define XMLPARSER_MODEL_H
+#pragma once
 
-#include "ModelEntity.h"
-#include <optional>
 #include <map>
 #include <unordered_map>
 #include <exception>
+#include "ModelEntity.h"
 
+class ModelEntity;
+class Resource;
+class Time;
+class Event;
+class ResourceType;
+class Group;
 
 class Model {
 
 public:
+	virtual ~Model() = default;
 	Model();
-
-	void register_time(const std::string& id, const std::string& name);
-	void register_event(const std::string& id, const std::string& name, const int &duration, const std::optional<std::string> &color = std::nullopt);
-	void register_resource(std::string id, std::string name, std::string rtype);
-	void register_resource_type(std::string id, std::string name);
+	//TODO: desfer virtuals dels registres
+	virtual void register_time(const std::string& id, const std::string& name);
+	virtual void register_event(const std::string& id, const std::string& name, const int &duration, const std::string &color = "");
+	virtual void register_resource(std::string id, std::string name, std::string rtype);
+	virtual void register_resource_type(std::string id, std::string name);
 
 	Time* get_time_by_ref(std::string ref) const;
 	Resource* get_resource_by_ref(std::string ref) const;
@@ -38,17 +43,17 @@ public:
 	std::set<std::string> get_times_from_group(const std::string & group_ref) const;
 
 	virtual void set_time_for_event(int event_num, int duration, Time* start_t) = 0;
-	virtual void prefer_resources_constraint() = 0;
-	virtual void prefer_times_constraint() = 0;
-	virtual void avoid_clashes_constraint() = 0;
-	virtual void split_events_constraint() = 0;
-	virtual void spread_events_constraint() = 0; 
+	virtual void prefer_resources_constraint(const std::set<std::string> &events_ids, const std::set<std::string> &resources_ids, const std::string &role) = 0;
+	virtual void prefer_times_constraint(const int &cost, const std::set<std::string> &events_ids, const std::set<std::string> &times_ids, int duration) = 0;
+	virtual void avoid_clashes_constraint(const int &cost, const std::set<std::string> &resources_ids) = 0;
+	virtual void split_events_constraint(const int &cost, const std::set<std::string> &events, const int &min, const int &max, const int &min_amount, const int &max_amount) = 0;
+	virtual void spread_events_constraint(const int &cost, const std::set<std::string> &event_groups, std::unordered_map<std::string, std::pair<int, int>> time_groups) = 0;
 	//time_groups is a dictionary of tuples. where keys are time_group references and values are tuples of the kind(minimum, maximum)
 
-	virtual void avoid_unavailable_times_constraint() = 0;
-	virtual void distribute_split_events_constraints() = 0;
-	virtual void limit_idle_times_constraint() = 0;
-	virtual void cluster_busy_times_constraint() = 0;
+	virtual void avoid_unavailable_times_constraint(const int &cost, const std::set<std::string> &resources_ids, const std::set<std::string> &times_ids) = 0;
+	virtual void distribute_split_events_constraints(const int &cost, const std::set<std::string> &event_ids, const int &duration, const int &min, const int &max) = 0;
+	virtual void limit_idle_times_constraint(const int &cost, const std::set<std::string> &resources_ids, const std::set<std::string> &time_groups_ids, const int &min, const int &max) = 0;
+	virtual void cluster_busy_times_constraint(const int &cost, const std::set<std::string> &resources_ids, const std::set<std::string> &time_groups_ids, const int &min, const int &max) = 0;
 	virtual void on_parsed_events(bool spread_constraint=true) = 0;
 	//TODO: cal ficar parametres i arreglar el return d'aquests metodes
 
@@ -87,6 +92,3 @@ public:
 		return msg_.c_str();
 	}
 };
-
-
-#endif //XMLPARSER_MODEL_H

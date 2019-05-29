@@ -1,8 +1,5 @@
-#ifndef XMLPARSER_MODELENTITY_H
-#define XMLPARSER_MODELENTITY_H
+#pragma once
 
-
-#include <optional>
 #include <string>
 #include <set>
 #include <unordered_map>
@@ -14,6 +11,8 @@ extern int times_counter;
 extern int events_counter;
 extern int resources_counter;
 extern int resource_type_counter;
+
+class Model;
 
 class Group{
 public:
@@ -47,9 +46,7 @@ protected:
 
 };
 
-
 class Resource;
-
 class ResourceType: public ModelEntity{
 public:
     ResourceType(const std::string &id="", const std::string &name ="NAMELESS_RESOURCE_TYPE");
@@ -87,7 +84,6 @@ protected:
 class Event: public ModelEntity{
 public:
 	Event(const std::string& id="", const std::string& name = "NAMELESS_EVENT", const int &duration = 1, const std::string &color= "");
-	
 	bool has_role(const std::string& role) const;
 	bool has_preassigned_resource(const std::string& role) const;
 	bool has_preassigned_time() const;
@@ -104,12 +100,7 @@ public:
 
 	void set_time(const std::string& time_ref);
 	void attach_reosurce(Resource* resource, std::string role, std::string resource_type, Model* model);
-
-
-
-
 	
-
 protected:
 	std::string type_;
 	std::string color_;
@@ -122,7 +113,3 @@ protected:
 	std::set<int> needed_; //set of needed ResourceType num's 
 
 };
-
-
-
-#endif //XMLPARSER_MODELSTYPES_H
