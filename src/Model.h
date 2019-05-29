@@ -68,9 +68,9 @@ protected:
 
 	std::unordered_map<std::string, ResourceType*> rtypes_;
 
-	std::unordered_map<std::string, Group> time_groups_;
-	std::unordered_map<std::string, Group> event_groups_;
-	std::unordered_map<std::string, Group> resource_groups_;
+	std::unordered_map<std::string, Group*> time_groups_;
+	std::unordered_map<std::string, Group*> event_groups_;
+	std::unordered_map<std::string, Group*> resource_groups_;
 
 
 	//num2 dictionaries (allowing fast fetching of elements by its elements.num attribute)

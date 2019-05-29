@@ -8,9 +8,9 @@ Model::Model()
 
 	rtypes_ = std::unordered_map<std::string, ResourceType*>();
 
-	time_groups_ = std::unordered_map<std::string, Group>();
-	event_groups_ = std::unordered_map<std::string, Group>();
-	resource_groups_ = std::unordered_map<std::string, Group>();
+	time_groups_ = std::unordered_map<std::string, Group*>();
+	event_groups_ = std::unordered_map<std::string, Group*>();
+	resource_groups_ = std::unordered_map<std::string, Group*>();
 
 	num2event_ = std::unordered_map<int, Event*>();
 	num2resource_ = std::unordered_map<int, Resource*>();
@@ -83,7 +83,7 @@ ResourceType* Model::get_rtype_by_ref(std::string ref) const{
 
 void Model::declare_time_group(const std::string& id, const std::string& name, const std::string& tag){
 	if (time_groups_.find(id)==time_groups_.end()){
-		Group group = Group(id, name, "TimeGroup", tag);
+		Group *group = new Group(id, name, "TimeGroup", tag);
 		time_groups_.insert({id, group});
 	}
 	else throw ModelException("Already defined TimeGroup");
@@ -92,7 +92,7 @@ void Model::declare_time_group(const std::string& id, const std::string& name, c
 void Model::declare_resource_group(const std::string& id, const std::string& name, const std::string& rtype_ref){
 	if(rtypes_.find(rtype_ref) != rtypes_.end()){
 		if(resource_groups_.find(id) == resource_groups_.end()){
-			Group group = Group(id, name, "ResourceGroup", rtype_ref);
+			Group *group = new Group(id, name, "ResourceGroup", rtype_ref);
 			resource_groups_.insert({ id, group });
 		}
 		else throw ModelException("Already defined ResourceGroup");
@@ -102,7 +102,7 @@ void Model::declare_resource_group(const std::string& id, const std::string& nam
 
 void Model::declare_event_group(const std::string& id, const std::string& name, const std::string& tag){
 	if (event_groups_.find(id) == event_groups_.end()){
-		Group group = Group(id, name, "EventGroup", tag);
+		Group *group = new Group(id, name, "EventGroup", tag);
 		event_groups_.insert({ id, group });
 	}
 	else throw ModelException("Already defined EventGroup");
@@ -112,23 +112,23 @@ void Model::time_to_group(const std::string& time_id, const std::string& group_r
 	if (times_.find(time_id) == times_.end() || time_groups_.find(group_ref) == time_groups_.end())
 		throw ModelException("Undeclared reference encountered");
 	times_[time_id]->add_group(group_ref);
-	time_groups_[group_ref].add_element(time_id);
+	time_groups_[group_ref]->add_element(time_id);
 }
 
 void Model::resource_to_group(const std::string& resource_id, const std::string& group_ref){
 	if (resources_.find(resource_id) == resources_.end() || resource_groups_.find(group_ref) == resource_groups_.end())
 		throw ModelException("Undeclared reference encountered");
-	if (resources_[resource_id]->get_rtype_ref() != resource_groups_[group_ref].get_opt())
+	if (resources_[resource_id]->get_rtype_ref() != resource_groups_[group_ref]->get_opt())
 		throw ModelException("Attached resource to a group of different type");
 	resources_[resource_id]->add_group(group_ref);
-	resource_groups_[resource_id].add_element(resource_id);
+	resource_groups_[resource_id]->add_element(resource_id);
 }
 
 void Model::event_to_group(const std::string& event_id, const std::string& group_ref){
 	if (events_.find(event_id) == events_.end() || event_groups_.find(group_ref) == event_groups_.end())
 		throw ModelException("Undeclared reference encountered");
 	events_[event_id]->add_group(group_ref);
-	event_groups_[group_ref].add_element(event_id);
+	event_groups_[group_ref]->add_element(event_id);
 }
 
 int Model::upper_bound_by_resource_type(const int &num) const{
@@ -138,19 +138,19 @@ int Model::upper_bound_by_resource_type(const int &num) const{
 std::set<std::string> Model::get_events_from_group(const std::string& group_ref) const{
 	if (group_ref.empty() || event_groups_.find(group_ref) == event_groups_.end())
 		throw ModelException("Incorrect group_ref");
-	return event_groups_.find(group_ref)->second.get_elems();
+	return event_groups_.find(group_ref)->second->get_elems();
 }
 
 std::set<std::string> Model::get_resources_from_group(const std::string& group_ref) const{
 	if (group_ref.empty() || resource_groups_.find(group_ref) == resource_groups_.end())
 		throw ModelException("Incorrect group_ref");
-	return resource_groups_.find(group_ref)->second.get_elems();
+	return resource_groups_.find(group_ref)->second->get_elems();
 }
 
 std::set<std::string> Model::get_times_from_group(const std::string& group_ref) const{
 	if (group_ref.empty() || time_groups_.find(group_ref) == time_groups_.end())
 		throw ModelException("Incorrect group_ref");
-	return time_groups_.find(group_ref)->second.get_elems();
+	return time_groups_.find(group_ref)->second->get_elems();
 }
 
 

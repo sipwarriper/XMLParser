@@ -4,7 +4,7 @@
 
 int main() {
 	
-	std::string filename = "instances/BrazilInstance1.xml";
+	std::string filename = "../instances/BrazilInstance1.xml";
 
 	auto printer = XHSTTPrinterModel(filename);
 
